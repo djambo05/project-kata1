@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 
 const App = () => (
@@ -8,8 +8,10 @@ const App = () => (
 );
 
 const HookSwitcher = () => {
+  const [color, setColor] = useState("black");
+
   return (
-    <div style={{ padding: "10px", backgroundColor: "white" }}>
+    <div style={{ padding: "10px", backgroundColor: color }}>
       <button onClick={() => {}}>Dark</button>
       <button onClick={() => {}}>Light</button>
     </div>
