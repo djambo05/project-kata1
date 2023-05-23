@@ -1,4 +1,4 @@
-import React, { Component, useContext, useState } from "react";
+import React, { Component, useContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 
 const App = () => {
@@ -19,6 +19,9 @@ const App = () => {
 };
 
 const HookCounter = ({ value }) => {
+  useEffect(() => {
+    console.log("useEffect()");
+  }, []);
   return <p>{value}</p>;
 };
 
@@ -26,7 +29,7 @@ class ClassCounter extends Component {
   componentDidMount() {
     console.log("class: mount");
   }
-  componentDidUpdate() {
+  componentDidUpdate(props) {
     console.log("class: update");
   }
   componentWillUnmount() {
