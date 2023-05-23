@@ -12,8 +12,20 @@ const HookSwitcher = () => {
 
   return (
     <div style={{ padding: "10px", backgroundColor: color }}>
-      <button onClick={() => {}}>Dark</button>
-      <button onClick={() => {}}>Light</button>
+      <button
+        onClick={() => {
+          setColor("black");
+        }}
+      >
+        Dark
+      </button>
+      <button
+        onClick={() => {
+          setColor("white");
+        }}
+      >
+        Light
+      </button>
     </div>
   );
 };
