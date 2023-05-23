@@ -1,4 +1,4 @@
-import React, { Component, useContext, useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 
 const App = () => {
@@ -9,8 +9,7 @@ const App = () => {
       <div>
         <button onClick={() => setValue((prev) => prev + 1)}>+</button>
         <button onClick={() => setVisible(false)}>hide</button>
-        <ClassCounter value={value} />
-        <HookCounter value={value} />
+        <Notification />
       </div>
     );
   } else {
@@ -20,9 +19,12 @@ const App = () => {
 
 const HookCounter = ({ value }) => {
   useEffect(() => {
-    console.log("useEffect()");
-    return () => console.log("clear");
-  }, [value]);
+    console.log("useEffect(mount)");
+  }, []);
+  useEffect(() => {
+    console.log("useEffect(update)");
+  });
+  useEffect(() => () => console.log("useEffect(unmount)"), []);
   return <p>{value}</p>;
 };
 
@@ -41,9 +43,16 @@ class ClassCounter extends Component {
   }
 }
 
+const Notification = () => {
+  const [svisible, setSvisible] = useState(true);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setSvisible(false);
+    }, 2500);
+    return () => clearTimeout(timeout);
+  }, []);
+  return <div>{svisible && <p>Hello</p>}</div>;
+};
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+root.render(<App />);
