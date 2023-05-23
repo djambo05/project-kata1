@@ -9,12 +9,20 @@ const App = () => (
 
 const HookSwitcher = () => {
   const [color, setColor] = useState("black");
+  const [fontSize, setFontSize] = useState(14);
 
   return (
-    <div style={{ padding: "10px", backgroundColor: color }}>
+    <div
+      style={{
+        padding: "10px",
+        backgroundColor: color,
+        fontSize: `${fontSize}px`,
+      }}
+    >
+      Hello World
       <button
         onClick={() => {
-          setColor("black");
+          setColor("grey");
         }}
       >
         Dark
@@ -25,6 +33,20 @@ const HookSwitcher = () => {
         }}
       >
         Light
+      </button>
+      <button
+        onClick={() => {
+          setFontSize((prev) => prev + 2);
+        }}
+      >
+        +
+      </button>
+      <button
+        onClick={() => {
+          setFontSize((prev) => prev - 2);
+        }}
+      >
+        -
       </button>
     </div>
   );
