@@ -45,7 +45,11 @@ class ClassCounter extends Component {
 
 const Notification = () => {
   const [visible, setVisible] = useState(true);
-
+  useEffect(() => {
+    setTimeout(() => {
+      setVisible(false);
+    }, 2500);
+  }, []);
   return <div>{visible && <p>Hello</p>}</div>;
 };
 
