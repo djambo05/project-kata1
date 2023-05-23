@@ -21,7 +21,8 @@ const App = () => {
 const HookCounter = ({ value }) => {
   useEffect(() => {
     console.log("useEffect()");
-  }, []);
+    return () => console.log("clear");
+  }, [value]);
   return <p>{value}</p>;
 };
 
