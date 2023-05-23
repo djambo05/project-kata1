@@ -44,13 +44,14 @@ class ClassCounter extends Component {
 }
 
 const Notification = () => {
-  const [visible, setVisible] = useState(true);
+  const [svisible, setSvisible] = useState(true);
   useEffect(() => {
-    setTimeout(() => {
-      setVisible(false);
+    const timeout = setTimeout(() => {
+      setSvisible(false);
     }, 2500);
+    return () => clearTimeout(timeout);
   }, []);
-  return <div>{visible && <p>Hello</p>}</div>;
+  return <div>{svisible && <p>Hello</p>}</div>;
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
