@@ -1,15 +1,15 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ReactDOM from "react-dom/client";
 
 const App = () => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(1);
   const [visible, setVisible] = useState(true);
   if (visible) {
     return (
       <div>
         <button onClick={() => setValue((prev) => prev + 1)}>+</button>
         <button onClick={() => setVisible(false)}>hide</button>
-        <Notification />
+        <PlanetInfo id={value} />
       </div>
     );
   } else {
@@ -17,41 +17,34 @@ const App = () => {
   }
 };
 
-const HookCounter = ({ value }) => {
+const useRequest = (request) => {
+  const [dataState, setDataState] = useState(null);
   useEffect(() => {
-    console.log("useEffect(mount)");
-  }, []);
-  useEffect(() => {
-    console.log("useEffect(update)");
-  });
-  useEffect(() => () => console.log("useEffect(unmount)"), []);
-  return <p>{value}</p>;
+    let cancelled = false;
+    request().then((data) => !cancelled && setDataState(data));
+    return () => (cancelled = true);
+  }, [request]);
+  return dataState;
 };
 
-class ClassCounter extends Component {
-  componentDidMount() {
-    console.log("class: mount");
-  }
-  componentDidUpdate(props) {
-    console.log("class: update");
-  }
-  componentWillUnmount() {
-    console.log("class: unmount");
-  }
-  render() {
-    return <p>{this.props.value}</p>;
-  }
-}
+const getPlanet = (id) => {
+  return fetch(`https://swapi.dev/api/planets/${id}`)
+    .then((res) => res.json())
+    .then((data) => data);
+};
 
-const Notification = () => {
-  const [svisible, setSvisible] = useState(true);
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSvisible(false);
-    }, 2500);
-    return () => clearTimeout(timeout);
-  }, []);
-  return <div>{svisible && <p>Hello</p>}</div>;
+const usePlanetInfo = (id) => {
+  const request = useCallback(() => getPlanet(id), [id]);
+  return useRequest(request);
+};
+
+const PlanetInfo = ({ id }) => {
+  const data = usePlanetInfo(id);
+  return (
+    <div>
+      {id} - {data && data.name}
+    </div>
+  );
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
