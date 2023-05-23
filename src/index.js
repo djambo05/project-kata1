@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import ReactDOM from "react-dom/client";
 
 const App = () => {
@@ -18,12 +18,29 @@ const App = () => {
 };
 
 const useRequest = (request) => {
-  const [dataState, setDataState] = useState(null);
+  const initialState = useMemo(
+    () => ({
+      data: null,
+      loading: true,
+      error: null,
+    }),
+    []
+  );
+  const [dataState, setDataState] = useState(initialState);
   useEffect(() => {
+    setDataState(initialState);
     let cancelled = false;
-    request().then((data) => !cancelled && setDataState(data));
+    request()
+      .then(
+        (data) =>
+          !cancelled && setDataState({ data, loading: false, error: null })
+      )
+      .catch(
+        (error) =>
+          !cancelled && setDataState({ data: null, loading: false, error })
+      );
     return () => (cancelled = true);
-  }, [request]);
+  }, [request, initialState]);
   return dataState;
 };
 
@@ -39,7 +56,13 @@ const usePlanetInfo = (id) => {
 };
 
 const PlanetInfo = ({ id }) => {
-  const data = usePlanetInfo(id);
+  const { data, loading, error } = usePlanetInfo(id);
+  if (error) {
+    return <div>Something is wrong</div>;
+  }
+  if (loading) {
+    return <div>Loading</div>;
+  }
   return (
     <div>
       {id} - {data && data.name}
